@@ -13,7 +13,7 @@ const KEY = process.env.JD_COOKIE;
 const TG_Token = '1559044303:AAF-CpNbzZ6DFwUQnIZs13U-yC2A_u1q2lY';
 const TG_ID = 1452454679
 const DualKey = process.env.JD_COOKIE_2;
-var bot = new TelegramBot(token, {polling: true});
+var bot = new TelegramBot(TG_Token, {polling: true});
 
 
 
