@@ -6,11 +6,15 @@ const exec = require('child_process').execSync;
 const fs = require('fs');
 const rp = require('request-promise');
 const download = require('download');
+var TelegramBot = require('node-telegram-bot-api');
 
 // 公共变量
 const KEY = process.env.JD_COOKIE;
-const serverJ = process.env.PUSH_KEY;
+const TG_Token = '1559044303:AAF-CpNbzZ6DFwUQnIZs13U-yC2A_u1q2lY';
+const TG_ID = 1452454679
 const DualKey = process.env.JD_COOKIE_2;
+var bot = new TelegramBot(token, {polling: true});
+
 
 
 async function downFile () {
@@ -28,19 +32,6 @@ async function changeFile () {
    await fs.writeFileSync( './JD_DailyBonus.js', content, 'utf8')
 }
 
-async function sendNotify (title,desp) {
-  const options ={
-    uri:  `https://sctapi.ftqq.com/${serverJ}.send`,
-    form: { title, desp },
-    json: true,
-    method: 'POST'
-  }
-  await rp.post(options).then(res=>{
-    console.log(res)
-  }).catch((err)=>{
-    console.log(err)
-  })
-}
 
 async function start() {
   if (!KEY) {
@@ -57,7 +48,7 @@ async function start() {
   await exec("node JD_DailyBonus.js >> result.txt");
   console.log('执行完毕')
 
-  if (serverJ) {
+  if (TG_Token) {
     const path = "./result.txt";
     let content = "";
     if (fs.existsSync(path)) {
@@ -67,9 +58,8 @@ async function start() {
     let res = t ? t[1].replace(/\n/,'') : '失败'
     let t2 = content.match(/【签到总计】:((.|\n)*)【账号总计】/)
     let res2 = t2 ? t2[1].replace(/\n/,'') : '总计0'
-
-    
-    await sendNotify("" + ` ${res2} ` + ` ${res} ` + new Date().toLocaleDateString(), content);
+    resp = ` ${res2} ` + ` ${res} ` + new Date().toLocaleDateString() + content
+    await bot.sendMessage(TG_ID, resp)
   }
 }
 
