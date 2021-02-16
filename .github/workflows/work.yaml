@@ -19,6 +19,8 @@ jobs:
                 node-version: '12.x'
             - name: Run app
               run: npm install
+            - name: Telegram Bot API
+              run: npm install node-telegram-bot-api --save
             - run: node app.js
               env:
                 JD_COOKIE: ${{ secrets.JD_COOKIE }}
